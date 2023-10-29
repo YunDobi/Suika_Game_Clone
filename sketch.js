@@ -8,6 +8,7 @@ let render = Matter.Render.create({
 const World = Matter.World;
 let current = null;
 let isClicking = false;
+let falling = false;
 
 //mouse move
 let mouse = Matter.Mouse.create(render.canvas);
@@ -41,47 +42,59 @@ World.add(engine.world, [
   wall(610, 360, 20, 700),
 ]);
 
-
 // eslint-disable-next-line func-style
 function addCurrentFruit() {
-  current = Matter.Bodies.circle(300, 50, 15, { isStatic: true, render: {fillStyle: 'white'} });
+  console.log(current);
+  current = Matter.Bodies.circle(300, 50, 15, {
+    isStatic: true,
+    render: { fillStyle: 'white' },
+  });
   World.add(engine.world, current);
 }
 
 addCurrentFruit();
 
 Matter.Events.on(mouseConstraint, 'mousedown', () => {
-  isClicking = true;
-})
+  if (!falling) {
+    isClicking = true;
+  }
+});
 
 Matter.Events.on(mouseConstraint, 'mousemove', () => {
   // console.log(current)
-  if (isClicking) {
+  if (isClicking === true) {
     try {
-      Matter.Body.setPosition(current, {x: mouse.position.x, y: current.position.y});
+      Matter.Body.setPosition(current, {
+        x: mouse.position.x,
+        y: current.position.y,
+      });
     } catch (error) {
-      console.log("already falling")
+      console.log('already falling');
     }
   }
 });
 
 Matter.Events.on(mouseConstraint, 'mouseup', () => {
+  if (falling) return;
+
   isClicking = false;
-  if (current !== null) {
-    Matter.Body.setStatic(current, false);
-  }
+  falling = true;
+  Matter.Body.setStatic(current, false);
   current = null;
-  if (!isClicking) {
-    setTimeout(() => {
-      addCurrentFruit();
-    }, 3000);
-  }
+
+  console.log('c', isClicking, falling);
+
+  setTimeout(() => {
+    addCurrentFruit();
+    falling = false;
+  }, 2000);
 });
 
 Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
   // console.log("dd", pairs);
+  falling = false;
   pairs.forEach(({ bodyA, bodyB }) => {
-    console.log(bodyA.label.includes('Circle'), bodyB);
+    // console.log(bodyA.label.includes('Circle'), bodyB);
     if (
       bodyA.label.includes('Circle') &&
       bodyB.label.includes('Circle') &&
@@ -101,5 +114,6 @@ Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
   });
 });
 
-Matter.Engine.run(engine);
+Matter.Runner.run(engine);
+// Matter.Engine.run(engine);
 Matter.Render.run(render);
