@@ -45,18 +45,18 @@ World.add(engine.world, [
 
 // eslint-disable-next-line func-style
 function addCurrentFruit() {
-  console.log(current);
-  // if (!current) {
-  //   console.log("somthing is working right now");
-  //   return;
-  // }
+  console.log(current, falling);
+  if (falling === true) {
+    console.log('it is falling');
+    return;
+  }
   current = Matter.Bodies.circle(300, 50, Math.floor(Math.random() * 50) + 15, {
     // isStatic: true,
     isSleeping: true,
     render: { fillStyle: 'white' },
     restitution: 0.2,
   });
-  console.log(current)
+  console.log(current);
   World.add(engine.world, current);
 }
 
@@ -91,15 +91,12 @@ Matter.Events.on(mouseConstraint, 'mousemove', () => {
 });
 
 Matter.Events.on(mouseConstraint, 'mouseup', () => {
-  if (falling) return;
+  if (falling || current === "loading") return;
 
   isClicking = false;
   falling = true;
-  // Matter.Body.setStatic(current, false);
   Matter.Sleeping.set(current, false);
-  current = null;
-
-  console.log('c', isClicking, falling);
+  current = 'loading';
 
   setTimeout(() => {
     addCurrentFruit();
@@ -117,8 +114,7 @@ Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
       bodyB.label.includes('Circle') &&
       bodyA.circleRadius === bodyB.circleRadius
     ) {
-      World.remove(engine.world, bodyA);
-      World.remove(engine.world, bodyB);
+      World.remove(engine.world, [bodyA, bodyB]);
       World.add(engine.world, [
         Matter.Bodies.circle(
           bodyA.position.x,
