@@ -2,9 +2,8 @@ let engine = Matter.Engine.create();
 let render = Matter.Render.create({
   element: document.getElementById('container'),
   engine: engine,
-  options: { wireframes: false, width: 620, height: 850 },
+  options: { wireframes: false, width: 430, height: 754 },
 });
-
 const World = Matter.World;
 let current = null;
 let isClicking = false;
@@ -13,12 +12,12 @@ let falling = false;
 //mouse move
 let mouse = Matter.Mouse.create(render.canvas);
 let mouseConstraint = Matter.MouseConstraint.create(engine, {
-  mouse: mouse,
+  // mouse: mouse,
   constraint: {
     render: { visible: false },
   },
 });
-render.mouse = mouse;
+// render.mouse = mouse;
 
 const wall = (x, y, width, height) => {
   return Matter.Bodies.rectangle(x, y, width, height, {
@@ -27,28 +26,37 @@ const wall = (x, y, width, height) => {
   });
 };
 
-// const topLine = Matter.Bodies.rectangle(300, 0, 600, 20, {
-//   isStatic: true,
-//   render: {visible: true}
-// });
+const topLine = Matter.Bodies.rectangle(300, 0, 600, 20, {
+  isStatic: true,
+  isSensor: true,
+  render: { visible: true, fillStyle: '#E6B143' },
+});
 
 World.add(engine.world, [
   mouseConstraint,
   //ground
-  wall(300, 700, 600, 20),
+  wall(300, 754, 600, 20),
   //left wall
-  wall(-10, 360, 20, 700),
+  wall(-10, 370, 20, 754),
   //right wall
-  wall(610, 360, 20, 700),
+  wall(440, 370, 20, 754),
+  topLine,
 ]);
 
 // eslint-disable-next-line func-style
 function addCurrentFruit() {
   console.log(current);
-  current = Matter.Bodies.circle(300, 50, 15, {
-    isStatic: true,
+  // if (!current) {
+  //   console.log("somthing is working right now");
+  //   return;
+  // }
+  current = Matter.Bodies.circle(300, 50, Math.floor(Math.random() * 50) + 15, {
+    // isStatic: true,
+    isSleeping: true,
     render: { fillStyle: 'white' },
+    restitution: 0.2,
   });
+  console.log(current)
   World.add(engine.world, current);
 }
 
@@ -57,6 +65,14 @@ addCurrentFruit();
 Matter.Events.on(mouseConstraint, 'mousedown', () => {
   if (!falling) {
     isClicking = true;
+    try {
+      Matter.Body.setPosition(current, {
+        x: mouse.position.x,
+        y: current.position.y,
+      });
+    } catch (error) {
+      console.log('already falling');
+    }
   }
 });
 
@@ -79,7 +95,8 @@ Matter.Events.on(mouseConstraint, 'mouseup', () => {
 
   isClicking = false;
   falling = true;
-  Matter.Body.setStatic(current, false);
+  // Matter.Body.setStatic(current, false);
+  Matter.Sleeping.set(current, false);
   current = null;
 
   console.log('c', isClicking, falling);
@@ -87,7 +104,7 @@ Matter.Events.on(mouseConstraint, 'mouseup', () => {
   setTimeout(() => {
     addCurrentFruit();
     falling = false;
-  }, 2000);
+  }, 1800);
 });
 
 Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
