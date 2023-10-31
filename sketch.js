@@ -120,10 +120,6 @@ World.add(engine.world, [
 const addCurrentFruit = () => {
   const randomFruit = getRandomFruit();
 
-  // if (falling === true) {
-  //   console.log('it is falling');
-  //   return;
-  // }
   current = Matter.Bodies.circle(300, 50, randomFruit.radius, {
     // isStatic: true,
     isSleeping: true,
@@ -133,7 +129,6 @@ const addCurrentFruit = () => {
     restitution: 0.2,
     label: randomFruit.label,
   });
-  // console.log(current);
   World.add(engine.world, current);
 };
 
@@ -154,7 +149,7 @@ Matter.Events.on(mouseConstraint, 'mousedown', () => {
 });
 
 Matter.Events.on(mouseConstraint, 'mousemove', () => {
-  console.log(current)
+  // console.log(current)
   if (isClicking === true) {
     try {
       Matter.Body.setPosition(current, {
@@ -183,16 +178,15 @@ Matter.Events.on(mouseConstraint, 'mouseup', () => {
 
 Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
   pairs.forEach(({ bodyA, bodyB }) => {
-    // console.log("position:", bodyA.position.y, bodyB.position.y)
-    console.log(pairs[0].collision.supports[0])
     if (bodyA.isStatic || bodyB.isStatic) return;
     const aY = bodyA.position.y + bodyA.circleRadius;
     const bY = bodyB.position.y + bodyB.circleRadius;
-    console.log('ay', aY, 'by', bY);
+    // console.log('ay', aY, 'by', bY);
 
     if (aY < 140 || bY < 140) {
-      alert('dd');
-      console.log('falling:', falling, 'current:', current);
+      alert('You over the line!');
+      // console.log('falling:', falling, 'current:', current);
+      Matter.Engine.clear(engine);
     }
 
     if (bodyA.label === bodyB.label) {
