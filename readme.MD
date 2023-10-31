@@ -4,3 +4,6 @@ I used matter.js for this project, and I completed the cloning of the Suika Game
 
 ### screenshot ###
 ![ScreenShot](./assets/screenshot.png)
+
+## plan to do ##
+draw fruits images and render sprite texture later.
