@@ -5,5 +5,5 @@ I used [matter.js](https://github.com/liabru/matter-js) for this project, and I 
 ### screenshot ###
 ![ScreenShot](./assets/screenshot.png)
 
-## plan to do ##
-draw fruits images and render sprite texture later.
+## source ##
+I found the images from ```https://github.com/kairess/suika-game/tree/main```, and I used it.

@@ -14,57 +14,57 @@ let render = Matter.Render.create({
 const Friuts = [
   {
     label: 'cherry',
-    radius: 40 / 2,
+    radius: 33 / 2,
     color: '#F20306',
   },
   {
     label: 'strawberry',
-    radius: 50 / 2,
+    radius: 48 / 2,
     color: '#FF624C',
   },
   {
     label: 'grape',
-    radius: 72 / 2,
+    radius: 61 / 2,
     color: '#A969FF',
   },
   {
     label: 'kumkwat',
-    radius: 85 / 2,
+    radius: 69 / 2,
     color: '#FFAF02',
   },
   {
     label: 'orange',
-    radius: 106 / 2,
+    radius: 89 / 2,
     color: '#FC8611',
   },
   {
     label: 'apple',
-    radius: 140 / 2,
+    radius: 114 / 2,
     color: '#F41615',
   },
   {
     label: 'pear',
-    radius: 160 / 2,
+    radius: 129 / 2,
     color: '#FDF176',
   },
   {
     label: 'peach',
-    radius: 196 / 2,
+    radius: 156 / 2,
     color: '#FEB6AC',
   },
   {
     label: 'pineapple',
-    radius: 220 / 2,
+    radius: 177 / 2,
     color: '#F7E608',
   },
   {
     label: 'melon',
-    radius: 270 / 2,
+    radius: 220 / 2,
     color: '#89CE13',
   },
   {
     label: 'watermelon',
-    radius: 300 / 2,
+    radius: 259 / 2,
     color: '#26AA1E',
   },
 ];
@@ -123,7 +123,7 @@ const addCurrentFruit = () => {
   current = Matter.Bodies.circle(300, 50, randomFruit.radius, {
     // isStatic: true,
     isSleeping: true,
-    render: { fillStyle: randomFruit.color },
+    render: { fillStyle: randomFruit.color , sprite: {texture: `./assets/fruits/${randomFruit.label}.png`} },
     friction: 0.05,
     density: 0.001,
     restitution: 0.2,
@@ -202,6 +202,7 @@ Matter.Events.on(engine, 'collisionStart', ({ pairs }) => {
           {
             render: {
               fillStyle: newFruit.color,
+              sprite: {texture: `./assets/fruits/${newFruit.label}.png`}
             },
             label: newFruit.label,
           }
