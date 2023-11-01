@@ -6,4 +6,4 @@ I used [matter.js](https://github.com/liabru/matter-js) for this project, and I 
 ![ScreenShot](./assets/screenshot.png)
 
 ## source ##
-I found the images from ```https://github.com/kairess/suika-game/tree/main```, and I used it.
+I found the images from https://github.com/kairess/suika-game/tree/main, and I used it.
